@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import PrivareRoute from './components/routing/PrivareRoute'
+import PrivateRoute from './components/routing/PrivateRoute'
 
 import PrivateScreen from './components/screens/PrivateScreen/PrivateScreen'
 import LoginScreen from './components/screens/LoginScreen/LoginScreen'
@@ -12,21 +12,16 @@ const App = () => {
   return (
     <Router>
       <div className='app'>
-        <Switch>
-          <PrivareRoute exact path='/' component={PrivateScreen} />
-          <Route exact path='/login' component={LoginScreen} />
-          <Route exact path='/register' component={RegisterScreen} />
+        <PrivateRoute path='/' element={<PrivateScreen />} />
+        <Routes>
+          <Route path='/login' element={<LoginScreen />} />
+          <Route path='/register' element={<RegisterScreen />} />
+          <Route path='/forgotpassword' element={<ForgotPasswordScreen />} />
           <Route
-            exact
-            path='/forgotpassword'
-            component={ForgotPasswordScreen}
-          />
-          <Route
-            exact
             path='/passwordreset/:resetToken'
-            component={ResetPasswordScreen}
+            element={<ResetPasswordScreen />}
           />
-        </Switch>
+        </Routes>
       </div>
     </Router>
   )
