@@ -25,7 +25,9 @@ const UserSchema = new mongoose.Schema({
   resetPasswordExpire: Date
 })
 
-// Keeps hashing away from controller function by doing it here, before mongoose saves schema
+// Keeps hashing away from controller function by doing it here,
+// Checks if password has been modifies, avoids rehashing passwords twice
+// Then hashes password and saves to model
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next()
@@ -34,6 +36,11 @@ UserSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt)
   next()
 })
+
+// Method to compare some user model password
+UserSchema.methods.matchPasswords = async function (password) {
+  return await bcrypt.compare(password, this.password)
+}
 
 const User = mongoose.model('User', UserSchema)
 
