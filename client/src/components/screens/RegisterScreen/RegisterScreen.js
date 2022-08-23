@@ -4,16 +4,56 @@ import { Link } from 'react-router-dom'
 
 import './registerScreen.css'
 
-const RegisterScreen = () => {
+const RegisterScreen = (history) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmpassword, setConfirmPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const registerHandler = async (e) => {
+    e.preventDefault()
+
+    const config = {
+      header: {
+        'Content-Type': 'application/json'
+      }
+    }
+    if (password !== confirmPassword) {
+      setPassword('')
+      setConfirmPassword('')
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+      return setError('Passwords do not match')
+    }
+
+    try {
+      const { data } = await axios.post(
+        '/api/auth/register',
+        {
+          username,
+          email,
+          password
+        },
+        config
+      )
+
+      localStorage.setItem('authToken', data.token)
+      history.push('/')
+    } catch (error) {
+      setError(error.response.data.error)
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+    }
+  }
 
   return (
     <div className='register-screen'>
-      <form className='register-screen__form'>
+      <form onSubmit={registerHandler} className='register-screen__form'>
         <h3 className='register-screen__title'>Register</h3>
+        {error && <span className='error-message'>{error}</span>}
         <div className='form-group'>
           <label htmlFor='name'>Username:</label>
           <input
@@ -22,7 +62,7 @@ const RegisterScreen = () => {
             id='name'
             placeholder='Enter Username'
             value={username}
-            onChange={() => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
 
@@ -34,7 +74,7 @@ const RegisterScreen = () => {
             id='email'
             placeholder='Enter Email'
             value={email}
-            onChange={() => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -46,7 +86,7 @@ const RegisterScreen = () => {
             id='password'
             placeholder='Enter Password'
             value={password}
-            onChange={() => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -57,8 +97,8 @@ const RegisterScreen = () => {
             required
             id='confirmpassword'
             placeholder='Retype Password'
-            value={confirmpassword}
-            onChange={() => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
         <button type='submit' className='btn btn-primary'>
