@@ -1,3 +1,5 @@
+const { triggerAsyncId } = require('async_hooks')
+const crypto = require('crypto')
 const User = require('../models/User.js')
 const ErrorResponse = require('../utils/errorResponse.js')
 const sendEmail = require('../utils/sendEmail.js')
@@ -44,12 +46,12 @@ exports.login = async (req, res, next) => {
 }
 
 exports.forgotPassword = async (req, res, next) => {
-  const {email} = req.body
+  const { email } = req.body
 
   try {
-    const user = await User.findOne({email})
+    const user = await User.findOne({ email })
 
-    if(!user) {
+    if (!user) {
       return next(new ErrorResponse('Email could not be sent', 404))
     }
 
@@ -80,15 +82,39 @@ exports.forgotPassword = async (req, res, next) => {
 
       await user.save()
 
-      return next(new ErrorResponse("Email could not be sent", 500))
+      return next(new ErrorResponse('Email could not be sent', 500))
     }
   } catch (error) {
     next(error)
   }
 }
 
-exports.resetPassword = (req, res, next) => {
-  res.send('Reset Password Route')
+exports.resetPassword = async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(req.params.resetToken)
+    .digest('hex')
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    })
+
+    if (!user) {
+      return next(new ErrorResponse('Invalid Reset Token', 400))
+    }
+
+    user.password = req.body.password
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpire = undefined
+
+    await user.save()
+
+    res.status(201).json({ success: true, data: 'Password Reset Success' })
+  } catch (error) {
+    next(error)
+  }
 }
 
 const sendToken = (user, statusCode, res) => {
