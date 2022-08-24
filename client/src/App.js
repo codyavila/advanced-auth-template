@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
+import Axios from 'axios'
+
 import PrivateRoute from './components/routing/PrivateRoute'
 
 import PrivateScreen from './components/screens/PrivateScreen/PrivateScreen'
@@ -7,6 +9,8 @@ import LoginScreen from './components/screens/LoginScreen/LoginScreen'
 import RegisterScreen from './components/screens/RegisterScreen/RegisterScreen'
 import ForgotPasswordScreen from './components/screens/ForgotPasswordScreen/ForgotPasswordScreen'
 import ResetPasswordScreen from './components/screens/ResetPasswordScreen/ResetPasswordScreen'
+
+Axios.defaults.baseURL = 'http://localhost:4000/'
 
 const App = () => {
   return (
