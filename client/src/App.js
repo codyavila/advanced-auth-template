@@ -14,7 +14,7 @@ import RegisterScreen from './components/screens/RegisterScreen/RegisterScreen'
 import ForgotPasswordScreen from './components/screens/ForgotPasswordScreen/ForgotPasswordScreen'
 import ResetPasswordScreen from './components/screens/ResetPasswordScreen/ResetPasswordScreen'
 
-Axios.defaults.baseURL = 'http://localhost:4000/'
+Axios.defaults.baseURL = 'https://advanced-auth-template.herokuapp.com/'
 
 const App = () => {
 
