@@ -18,6 +18,10 @@ app.use('/api/private', require('./routes/private.js'))
 // Error Handler (Should be last piece of middleware)
 app.use(errorHandler)
 
+app.get('/', (req, res) => {
+  res.send('APP IS RUNNING.')
+})
+
 const PORT = process.env.PORT || 5000
 
 const server = app.listen(PORT, () =>
