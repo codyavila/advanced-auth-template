@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
@@ -10,6 +10,12 @@ const RegisterScreen = (history) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (localStorage.getItem('authToken')) {
+      history.push('/')
+    }
+  }, [history])
 
   const registerHandler = async (e) => {
     e.preventDefault()
@@ -79,7 +85,7 @@ const RegisterScreen = (history) => {
         </div>
 
         <div className='form-group'>
-          <label htmlFor='password'>Email:</label>
+          <label htmlFor='password'>Password:</label>
           <input
             type='password'
             required
@@ -91,7 +97,7 @@ const RegisterScreen = (history) => {
         </div>
 
         <div className='form-group'>
-          <label htmlFor='confirmpassword'>Confim Passworm:</label>
+          <label htmlFor='confirmpassword'>Confirm Password:</label>
           <input
             type='password'
             required
