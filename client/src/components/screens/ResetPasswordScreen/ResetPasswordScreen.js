@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 
 import './resetPasswordScreen.css'
 
-const ResetPasswordScreen = ({ history, match }) => {
+const ResetPasswordScreen = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+ const id = useParams()
 
   const resetPasswordHandler = async (e) => {
     e.preventDefault()
@@ -30,17 +32,16 @@ const ResetPasswordScreen = ({ history, match }) => {
 
     try {
       const { data } = await axios.put(
-        `/api/auth/passwordreset/${match.params.resetToken}`,
+        `/api/auth/resetpassword/${id.resetToken}`,
         {
           password
         },
         config
       )
 
-      console.log(data)
       setSuccess(data.data)
     } catch (error) {
-      setError(error.response.data.error)
+      setError(error.message)
       setTimeout(() => {
         setError('')
       }, 5000)

@@ -1,4 +1,3 @@
-const { triggerAsyncId } = require('async_hooks')
 const crypto = require('crypto')
 const User = require('../models/User.js')
 const ErrorResponse = require('../utils/errorResponse.js')
@@ -59,7 +58,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     await user.save()
 
-    const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`
+    const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`
 
     const message = `
       <h1>Here is your password reset link</h1>

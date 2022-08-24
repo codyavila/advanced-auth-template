@@ -7,7 +7,9 @@ const errorHandler = require('./middleware/error.js')
 connectDB()
 
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth', require('./routes/auth.js'))

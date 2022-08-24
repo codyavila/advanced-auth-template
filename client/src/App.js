@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from 'react-router-dom'
 
 import Axios from 'axios'
 
@@ -13,6 +17,7 @@ import ResetPasswordScreen from './components/screens/ResetPasswordScreen/ResetP
 Axios.defaults.baseURL = 'http://localhost:4000/'
 
 const App = () => {
+
   return (
     <Router>
       <div className='app'>
@@ -22,7 +27,7 @@ const App = () => {
           <Route path='/register' element={<RegisterScreen />} />
           <Route path='/forgotpassword' element={<ForgotPasswordScreen />} />
           <Route
-            path='/passwordreset/:resetToken'
+            path='/resetpassword/:resetToken'
             element={<ResetPasswordScreen />}
           />
         </Routes>

@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './loginScreen.css'
 
-const LoginScreen = ({ history }) => {
+const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (localStorage.getItem('authToken')) {
-      history.push('/')
+      navigate('/')
     }
-  }, [history])
+  }, [navigate])
 
   const loginHandler = async (e) => {
     e.preventDefault()
@@ -32,7 +34,7 @@ const LoginScreen = ({ history }) => {
 
       localStorage.setItem('authToken', data.token)
 
-      history.push('/')
+      navigate('/')
     } catch (error) {
       setError(error.response.data.error)
       setTimeout(() => {
