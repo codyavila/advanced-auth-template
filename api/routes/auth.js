@@ -5,7 +5,8 @@ const {
   register,
   login,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  googleLogin
 } = require('../controllers/auth.js')
 
 // Different way of writing router.post('/register, <functions>)
@@ -16,5 +17,7 @@ router.route('/login').post(login)
 router.route('/forgotpassword').post(forgotPassword)
 
 router.route('/resetpassword/:resetToken').put(resetPassword)
+
+router.route('/googleLogin').post(googleLogin)
 
 module.exports = router

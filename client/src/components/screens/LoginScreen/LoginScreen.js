@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import './loginScreen.css'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -42,6 +43,26 @@ const LoginScreen = () => {
       }, 5000)
     }
   }
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      try {
+        const tokens = await axios.post('/api/auth/googleLogin', {
+          code
+        })
+        localStorage.setItem('authToken', tokens.data.tokens.id_token)
+        console.log(tokens.data.tokens)
+
+        navigate('/')
+      } catch (error) {
+        setError(error.response.data.error)
+        setTimeout(() => {
+          setError('')
+        }, 5000)
+      }
+    },
+    flow: 'auth-code'
+  })
 
   return (
     <div className='login-screen'>
@@ -86,6 +107,7 @@ const LoginScreen = () => {
           Don't have an account? <Link to='/register'>Register</Link>
         </span>
       </form>
+      <button onClick={() => googleLogin()}>Sign in with Google 🚀 </button>
     </div>
   )
 }

@@ -2,6 +2,13 @@ const crypto = require('crypto')
 const User = require('../models/User.js')
 const ErrorResponse = require('../utils/errorResponse.js')
 const sendEmail = require('../utils/sendEmail.js')
+const { OAuth2Client } = require('google-auth-library')
+
+const oAuth2Client = new OAuth2Client(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  'postmessage'
+)
 
 exports.register = async (req, res, next) => {
   const { username, email, password } = req.body
@@ -114,6 +121,13 @@ exports.resetPassword = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+exports.googleLogin = async (req, res, next) => {
+  const { tokens } = await oAuth2Client.getToken(req.body.code) // exchange code for tokens
+  console.log(tokens)
+
+  res.status(200).json({ success: true, tokens })
 }
 
 const sendToken = (user, statusCode, res) => {
